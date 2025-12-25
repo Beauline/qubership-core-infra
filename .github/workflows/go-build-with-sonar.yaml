@@ -179,11 +179,23 @@ jobs:
 
       - name: Install envtest
         if: inputs.install-envtest == true
+        env:
+          ENVTEST_SETUP_VERSION: "release-0.22"
+        working-directory: ${{ env.GO_MOD_DIR }}
         shell: bash
         run: |
-          echo "::info:: Installing envtest package..."
-          go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
-          SETUP_OUTPUT=$(setup-envtest use ${{ inputs.kube-version }} -p env)
+          set -euo pipefail
+          echo "::info:: Checking Controller-runtime version..."
+          CR_VERSION=$(go list -m -f "{{ .Version }}" sigs.k8s.io/controller-runtime)
+          ENVTEST_VERSION=$(echo $CR_VERSION | awk -F'[v.]' '{printf "release-%d.%d", $2, $3}')
+          echo "::info:: Trying setup-envtest@${ENVTEST_VERSION}..."
+          if go install sigs.k8s.io/controller-runtime/tools/setup-envtest@${ENVTEST_VERSION} 2>/dev/null; then
+            echo "::info:: Successfully installed setup-envtest@${ENVTEST_VERSION}"
+          else
+            echo "::warning:: Version ${ENVTEST_VERSION} not found, falling back to ${{ env.ENVTEST_SETUP_VERSION }}..."
+            go install sigs.k8s.io/controller-runtime/tools/setup-envtest@"${{ env.ENVTEST_SETUP_VERSION }}"
+          fi
+          SETUP_OUTPUT=$(setup-envtest use "${{ inputs.kube-version }}" -p env)
           echo "$SETUP_OUTPUT"
           ASSETS=$(echo "$SETUP_OUTPUT" | grep 'export KUBEBUILDER_ASSETS' | cut -d= -f2| tr -d "'\"")
           echo "KUBEBUILDER_ASSETS=$ASSETS" >> $GITHUB_ENV
@@ -192,7 +204,7 @@ jobs:
         working-directory: ${{ env.GO_MOD_DIR }}
         run: |
           echo "::info:: Running tests with coverage..."
-          go test -v ./... -coverpkg=${{ inputs.cover-packages }} -coverprofile coverage.out
+          go test -v ./... -coverpkg="${{ inputs.cover-packages }}" -coverprofile coverage.out
 
       - name: Upload coverage report to SonarCloud
         if: steps.prepare.outputs.run-sonar == 'true'
