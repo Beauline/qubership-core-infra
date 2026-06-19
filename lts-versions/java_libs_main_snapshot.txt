@@ -244,10 +244,10 @@ com.netcracker.cloud.maas.declarative:maas-declarative-kafka-client-quarkus-pare
 com.netcracker.cloud.maas.declarative:maas-kafka-quarkus-client-report-aggregate:9.0.3-SNAPSHOT
 com.netcracker.cloud.maas.declarative:maas-declarative-kafka-client-spring:7.1.3-SNAPSHOT
 com.netcracker.cloud.maas.declarative:maas-declarative-kafka-client-spring-bom:7.1.3-SNAPSHOT
-com.netcracker.cloud:core-external-bom:1.0.0-SNAPSHOT
-com.netcracker.cloud:core-external-boms:1.0.0-SNAPSHOT
-com.netcracker.cloud:core-quarkus-external-bom:1.0.0-SNAPSHOT
-com.netcracker.cloud:core-spring-external-bom:1.0.0-SNAPSHOT
+com.netcracker.cloud:core-external-bom:1.0.1-SNAPSHOT
+com.netcracker.cloud:core-external-boms:1.0.1-SNAPSHOT
+com.netcracker.cloud:core-quarkus-external-bom:1.0.1-SNAPSHOT
+com.netcracker.cloud:core-spring-external-bom:1.0.1-SNAPSHOT
 com.netcracker.cloud:core-internal-bom:1.0.0-SNAPSHOT
 com.netcracker.cloud:core-internal-boms:1.0.0-SNAPSHOT
 com.netcracker.cloud:core-quarkus-internal-bom:1.0.0-SNAPSHOT
